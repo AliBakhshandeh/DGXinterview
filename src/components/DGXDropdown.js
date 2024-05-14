@@ -12,6 +12,7 @@ const DGXDropdown = ({
     key: -1,
     name: "یک مورد را انتخاب کنید",
   });
+
   const handleClick = useCallback(() => {
     setIsOpen((prev) => !prev);
   }, [setIsOpen]);
@@ -61,6 +62,18 @@ const DGXDropdown = ({
     );
   }, [list, selectItem, handleClick, isOpen]);
 
+  const renderInputDropdown = useMemo(
+    () => (
+      <div
+        className={`input size text color ${isOpen && "active"}`}
+        onClick={handleClick}
+      >
+        {renderInput ? renderInput(selectedItem) : selectedItem?.name}
+      </div>
+    ),
+    [renderInput, selectedItem]
+  );
+
   useEffect(() => {
     if (defaultValue) {
       const val = list?.find((item) => item?.key === defaultValue);
@@ -71,12 +84,7 @@ const DGXDropdown = ({
   return (
     <>
       <div className="drop-down">
-        <div
-          className={`input size text color ${isOpen && "active"}`}
-          onClick={handleClick}
-        >
-          {renderInput ? renderInput(selectedItem, isOpen) : selectedItem?.name}
-        </div>
+        {renderInputDropdown}
         {renderOptions}
       </div>
     </>
