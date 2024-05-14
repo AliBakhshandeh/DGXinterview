@@ -98,3 +98,13 @@ body {
 .drop-down .list .item:hover {
   background-color: gray;
 }
+
+.flex{
+  display: flex;
+}
+.between{
+  justify-content: space-between;
+}
+.align-center{
+  align-items: center;
+}

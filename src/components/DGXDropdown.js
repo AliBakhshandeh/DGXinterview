@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-const DGXDropdown = ({ list = [], action = () => {}, defaultValue }) => {
+const DGXDropdown = ({
+  list = [],
+  action = () => {},
+  defaultValue,
+  renderComponent,
+  renderInput,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState({
     key: -1,
@@ -30,23 +36,27 @@ const DGXDropdown = ({ list = [], action = () => {}, defaultValue }) => {
       );
     return (
       <>
-        {isOpen && (
-          <div
-            onBlur={() => handleClick()}
-            tabIndex={0}
-            className="list size color"
-          >
-            {list.map((item, i) => (
-              <div
-                key={`${item.name}-${item.key}-${i}}`}
-                className="item size text"
-                onClick={() => selectItem(item)}
-              >
-                {item?.name}
-              </div>
-            ))}
-          </div>
-        )}
+        {isOpen &&
+          (renderComponent ? (
+            renderComponent(list, selectItem)
+          ) : (
+            <div
+              onBlur={() => handleClick()}
+              tabIndex={0}
+              className="list size color"
+            >
+              {list.map((item, i) => (
+                <div className="item size text">
+                  <div
+                    onClick={() => selectItem(item)}
+                    key={`${item.name}-${item.key}-${i}}`}
+                  >
+                    {item?.name}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
       </>
     );
   }, [list, selectItem, handleClick, isOpen]);
@@ -57,6 +67,7 @@ const DGXDropdown = ({ list = [], action = () => {}, defaultValue }) => {
       setSelectedItem(val);
     }
   }, [list]);
+
   return (
     <>
       <div className="drop-down">
@@ -64,7 +75,7 @@ const DGXDropdown = ({ list = [], action = () => {}, defaultValue }) => {
           className={`input size text color ${isOpen && "active"}`}
           onClick={handleClick}
         >
-          {selectedItem?.name}
+          {renderInput ? renderInput(selectedItem, isOpen) : selectedItem?.name}
         </div>
         {renderOptions}
       </div>
